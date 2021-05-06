@@ -1,1 +1,1 @@
-# docs.api.github.io
+# pt-channel-api-docs
