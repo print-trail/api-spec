@@ -1,1 +1,1 @@
-# pt-channel-api-docs
+# api spec
