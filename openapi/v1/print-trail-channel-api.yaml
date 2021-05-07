@@ -5,6 +5,10 @@ info:
   description: Open API spec for Print Trail API
   contact:
     name: Hansen Salim
+  x-logo:
+    url: "https://print-trail.github.io/api-spec/logo.png"
+    backgroundColor: "#fafafa"
+    altText: "Print Trail Logo"
 servers:
   - url: 'https://pt-core.consilstaging.com/api'
     description: Staging
