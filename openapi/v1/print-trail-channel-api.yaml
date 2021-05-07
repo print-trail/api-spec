@@ -7,7 +7,7 @@ info:
     name: Hansen Salim
   x-logo:
     url: "https://print-trail.github.io/api-spec/logo.png"
-    backgroundColor: "#FFFFFF"
+    backgroundColor: "#fafafa"
     altText: "Print Trail Logo"
 servers:
   - url: 'https://pt-core.consilstaging.com/api'
