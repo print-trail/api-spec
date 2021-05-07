@@ -6,9 +6,9 @@ info:
   contact:
     name: Hansen Salim
   x-logo:
-    url: 'https://print-trail.github.io/api-spec/logo.png'
+    url: "https://print-trail.github.io/api-spec/logo.png"
     backgroundColor: "#FFFFFF"
-    altText: 'Printtrail Logo'
+    altText: "Print Trail Logo"
 servers:
   - url: 'https://pt-core.consilstaging.com/api'
     description: Staging
