@@ -1,14 +1,14 @@
 openapi: 3.0.0
 info:
   title: channel
-  version: '1.0.0-dev'
+  version: 1.0.0-dev
   description: Open API spec for Print Trail API
   contact:
     name: Hansen Salim
   x-logo:
-    url: "https://print-trail.github.io/api-spec/logo.png"
-    backgroundColor: "#fafafa"
-    altText: "Print Trail Logo"
+    url: 'https://print-trail.github.io/api-spec/logo.png'
+    backgroundColor: '#fafafa'
+    altText: Print Trail Logo
 servers:
   - url: 'https://pt-core.consilstaging.com/api'
     description: Staging
@@ -26,12 +26,7 @@ paths:
         name: orderUuid
         in: path
         required: true
-      - schema:
-          type: string
-        name: channelId
-        in: path
-        required: true
-        description: The channel id provided by user as part of the API setup
+      - $ref: '#/components/parameters/channelId'
     get:
       summary: Get order
       tags:
@@ -65,68 +60,135 @@ paths:
               schema:
                 $ref: '#/components/schemas/OrderResponse'
               examples:
-                example-1:
+                example-order-created:
                   value:
-                    uuid: 095be615-a8ad-4c33-8e9c-c7612fbf6c9f
-                    poNumber: string
-                    phone: string
-                    orderNumber: string
-                    ptOrderNumber: string
-                    status: draft
-                    fulfillableStatus: draft
-                    createdAt: string
-                    totalItem: 0
-                    cancellable: true
-                    shipping:
-                      companyName: string
-                      countryName: string
-                      countryCode: string
-                      postcode: string
-                      address1: string
-                      address2: string
-                      address3: string
-                      address4: string
-                      city: string
-                      state: string
-                      firstName: string
-                      lastName: string
-                      mobile: string
-                      phone: string
-                      email: user@example.com
-                      note: string
-                    fulfilments:
-                      - uuid: string
-                        productionMethod: string
-                        supplierLocation:
-                          code: string
-                          countryCode: string
-                        status: string
-                        products:
-                          - sku: string
-                            name: string
-                            quantity: 0
-                            price:
-                              currencyCode: string
-                              amountMinorUnits: 0
-                    orderLines:
-                      - quantity: 1
-                        sku: string
-                    errors:
-                      - key: string
-                        message: string
-                        code: string
+                    data:
+                      uuid: 7370c4d5-4711-4360-bb1d-bb442262f19d
+                      purchaseOrder: DEPT/123/abc
+                      phoneNumber: 0191 123456
+                      orderNumber: 12345a
+                      printTrailOrderNumber: ptbp-order-pt-00001234
+                      status: draft
+                      fulfillableStatus: fully
+                      createdAt: '2021-02-23T15:54:53.000000Z'
+                      cancelStatus: allowed
+                      shippingDetails:
+                        postalAddress:
+                          companyName: Consilience
+                          postalCode: NE26 2HU
+                          address1: 305 Whitley Road
+                          address2: North Tyneside
+                          address3: string
+                          address4: string
+                          locality: string
+                          city: Whitley Bay
+                          state:
+                            name: Tyne & Wear
+                            code: NY
+                          country:
+                            name: United Kingdom
+                            code: GB
+                        deliveryContact:
+                          firstName: Fred
+                          lastName: East
+                          mobile: none
+                          phone: none
+                          email: fred.east@example.com
+                        note: string
+                      fulfilments:
+                        - uuid: string
+                          productionMethod: string
+                          supplierLocation:
+                            code: uk-northwest
+                            countryCode: GB
+                          status: string
+                          orderLines:
+                            - quantity: 23
+                              lineNumber: ptbd-order-0001234/004
+                              fulfilmentUuid: 67e8cbd0-282a-4e2a-a44b-9502d53c9d00
+                              product:
+                                name: My Happy Place Book
+                                sku: BOOK/HB/abc-123
+                                type: pod
+                                description: string
+                                additionalDetails:
+                                  - key: number_of_pages
+                                    value: '320'
+                                podEnabled: true
+                                warehouseEnabled: true
+                                activeState: active
+                                dimensions:
+                                  weight:
+                                    measurement: 23
+                                    unit: kg
+                                  length:
+                                    measurement: 23
+                                    unit: mm
+                                  width:
+                                    measurement: 23
+                                    unit: mm
+                                  depth:
+                                    measurement: 23
+                                    unit: mm
+                                price:
+                                  - currencyCode: GBP
+                                    amountMinorUnits: 1299
+                      errors:
+                        - code: invalid-sku
+                          message: The SKU is not recognised for any available product.
+                          key: ptbd-order-1234-line-002
         '422':
           description: Validation Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Problem'
+              examples:
+                example-validation-errors:
+                  value:
+                    type: 'about:blank'
+                    status: 422
+                    title: Validation errors
+                    violations:
+                      - property: shippingDetails.postalAddress.country.code
+                        message: The shipping details.postal address.country.code may not be greater than 3 characters.
+                      - property: shippingDetails.deliveryContact.email
+                        message: The shipping details.delivery contact.email must be a valid email address.
       requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/Order'
-            examples: {}
+            examples:
+              example-1:
+                value:
+                  purchaseOrder: DEPT/123/abc
+                  phoneNumber: 0191 123456
+                  orderNumber: 12345a
+                  status: draft
+                  shippingDetails:
+                    postalAddress:
+                      companyName: Consilience
+                      postalCode: NE26 2HU
+                      address1: 305 Whitley Road
+                      address2: North Tyneside
+                      address3: string
+                      address4: string
+                      locality: string
+                      city: Whitley Bay
+                      state:
+                        name: Tyne & Wear
+                        code: NY
+                      country:
+                        name: United Kingdom
+                        code: GB
+                    deliveryContact:
+                      firstName: Jane
+                      lastName: Doe
+                      mobile: ''
+                      phone: ''
+                      email: jane.doe@example.com
+                    note: Leave the item behind the plant pot.
         description: Post the necessary fields for the API to create a new order.
       description: |-
         Create a new draft order or replace an existing draft order.
@@ -137,12 +199,7 @@ paths:
         - All
       parameters: []
     parameters:
-      - schema:
-          type: string
-        name: channelId
-        in: path
-        required: true
-        description: Selects the channel
+      - $ref: '#/components/parameters/channelId'
     get:
       summary: Search Orders
       operationId: searchOrders
@@ -210,18 +267,10 @@ paths:
       operationId: getTeam
       description: Get Team details.
     parameters:
-      - schema:
-          type: string
-        name: channelId
-        in: path
-        required: true
+      - $ref: '#/components/parameters/channelId'
   '/v1/channels/{channelId}':
     parameters:
-      - schema:
-          type: string
-        name: channelId
-        in: path
-        required: true
+      - $ref: '#/components/parameters/channelId'
     get:
       summary: Get channel info
       tags:
@@ -255,11 +304,7 @@ paths:
       description: Get channel detail.
   '/v1/channels/{channelId}/products':
     parameters:
-      - schema:
-          type: string
-        name: channelId
-        in: path
-        required: true
+      - $ref: '#/components/parameters/channelId'
     get:
       summary: Search All Products
       tags:
@@ -278,7 +323,7 @@ paths:
                     data:
                       - name: My Happy Place Book
                         sku: BOOK/HB/abc-123
-                        type: string
+                        type: warehouse
                         description: string
                         additionalDetails:
                           - key: string
@@ -299,7 +344,7 @@ paths:
                           depth:
                             measurement: 23
                             unit: mm
-                        prices:
+                        price:
                           - currencyCode: GBP
                             amountMinorUnits: 499
                     meta:
@@ -346,11 +391,7 @@ paths:
           description: 'Match a product SKU, with wildcard support'
   '/v1/channels/{channelId}/orders/{orderUuid}/confirm':
     parameters:
-      - schema:
-          type: string
-        name: channelId
-        in: path
-        required: true
+      - $ref: '#/components/parameters/channelId'
       - schema:
           type: string
         name: orderUuid
@@ -384,11 +425,7 @@ paths:
         - All
   '/v1/channels/{channelId}/orders/{orderUuid}/cancel':
     parameters:
-      - schema:
-          type: string
-        name: channelId
-        in: path
-        required: true
+      - $ref: '#/components/parameters/channelId'
       - schema:
           type: string
         name: orderUuid
@@ -422,12 +459,7 @@ paths:
       parameters: []
   '/v1/channels/{channelId}/products/{productUuid}':
     parameters:
-      - schema:
-          type: string
-        name: channelId
-        in: path
-        required: true
-        description: Selects the channel
+      - $ref: '#/components/parameters/channelId'
       - schema:
           type: string
           format: uuid
@@ -468,7 +500,6 @@ components:
           format: uuid
           description: 'Order identifier, set by Print Trail when a draft order is created.'
           example: 7370c4d5-4711-4360-bb1d-bb442262f19d
-          readOnly: true
         purchaseOrder:
           type: string
           description: |-
@@ -564,13 +595,9 @@ components:
           type: array
           uniqueItems: true
           minItems: 1
-          description: |-
-            The original order lines supplied by the channel shop.
-
-            TODO: More details and a model needed here.
+          description: The original order lines supplied by the channel shop.
           items:
             $ref: '#/components/schemas/OrderLine'
-          writeOnly: true
         errors:
           type: array
           description: Errors related to this order
@@ -681,6 +708,7 @@ components:
           type: string
           minLength: 1
           example: My Happy Place Book
+          readOnly: true
         sku:
           type: string
           minLength: 1
@@ -689,9 +717,15 @@ components:
         type:
           type: string
           minLength: 1
+          example: pod
+          enum:
+            - pod
+            - warehouse
+          readOnly: true
         description:
           type: string
           minLength: 1
+          readOnly: true
         additionalDetails:
           type: array
           uniqueItems: true
@@ -710,10 +744,15 @@ components:
             required:
               - key
               - value
+          readOnly: true
         podEnabled:
           type: boolean
+          default: false
+          readOnly: true
         warehouseEnabled:
           type: boolean
+          default: false
+          readOnly: true
         activeState:
           type: string
           example: active
@@ -722,26 +761,26 @@ components:
             - inactive
           default: active
           description: Meanings TBC.
+          readOnly: true
         dimensions:
           $ref: '#/components/schemas/Dimensions'
-        prices:
+        price:
           type: array
           uniqueItems: true
           minItems: 1
           items:
-            $ref: '#/components/schemas/MoneyAmount'
+            $ref: '#/components/schemas/ProductPrice'
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          description: Can be used as an alternative to SKU when writing order lines.
       required:
         - name
-        - sku
         - type
         - description
         - additionalDetails
-        - podEnabled
-        - warehouseEnabled
         - activeState
-        - dimensions
-        - prices
-      readOnly: true
     Fulfilment:
       type: object
       description: |-
@@ -818,20 +857,25 @@ components:
       properties:
         firstName:
           type: string
-          minLength: 1
+          example: Jane
+          maxLength: 100
         lastName:
           type: string
-          minLength: 1
+          maxLength: 100
+          example: Doe
         mobile:
           type: string
-          minLength: 1
+          maxLength: 50
+          example: +44 7771 123456
         phone:
           type: string
-          minLength: 1
+          maxLength: 50
+          example: +1 987 1234567
         email:
           type: string
-          minLength: 1
           format: email
+          maxLength: 100
+          example: jane.doe@example.com
       required:
         - firstName
     OrderResponse:
@@ -895,7 +939,7 @@ components:
     OrderLine:
       title: OrderLine
       type: object
-      description: 'The details of an order line provided by '
+      description: The details of an order line provided by the shop.
       properties:
         quantity:
           type: number
@@ -918,6 +962,8 @@ components:
           description: The filfilment UUDI if the orderline is fulfilled (this includes draft fulfilments).
         product:
           $ref: '#/components/schemas/Product'
+        price:
+          $ref: '#/components/schemas/OrderLinePrice'
       required:
         - quantity
         - lineNumber
@@ -969,11 +1015,12 @@ components:
           $ref: '#/components/schemas/Contact'
         note:
           type: string
-          minLength: 1
           description: |-
             Notes to add to this shipment.
 
             TBC: how this field will be used, and any limitations.
+          example: Leave the item behind the plant pot.
+          maxLength: 200
     ChannelResponse:
       title: ChannelResponse
       type: object
@@ -1027,8 +1074,8 @@ components:
         - measurement
         - unit
     Dimensions:
-      title: Dimensions
       type: object
+      title: Dimensions
       description: All dimensions of a single object.
       properties:
         weight:
@@ -1039,6 +1086,7 @@ components:
           $ref: '#/components/schemas/MeasurementLength'
         depth:
           $ref: '#/components/schemas/MeasurementLength'
+      readOnly: true
     MoneyAmount:
       title: MoneyAmount
       type: object
@@ -1169,12 +1217,46 @@ components:
           description: |
             An absolute URI that identifies the specific occurrence of the problem.
             It may or may not yield further information if dereferenced.
+
+            Not yet used in this API.
       readOnly: true
+    ProductPrice:
+      title: ProductPrice
+      type: object
+      description: |-
+        All price details for a product, as known by Print Trail.
+
+        Further details of this TBC.
+      properties:
+        net:
+          $ref: '#/components/schemas/MoneyAmount'
+    OrderLinePrice:
+      title: OrderLinePrice
+      type: object
+      properties:
+        itemNet:
+          $ref: '#/components/schemas/MoneyAmount'
+      description: |-
+        The price components for an order line, as declared by the shop. These may differ from the product price (where that is even known) since they relate to what was charged for this order, including current discounts and specific taxes.
+
+        Full details for this object TBC.
   securitySchemes:
     ChannelApiKey:
       type: http
       scheme: bearer
   responses: {}
+  parameters:
+    channelId:
+      name: channelId
+      in: path
+      required: true
+      schema:
+        type: string
+        pattern: '[a-z0-9]-[a-z0-9]'
+        example: acme-bks
+        minLength: 8
+        maxLength: 20
+      description: The channel id connecting the shop to the Print Trail client
 tags:
   - name: All
   - name: Channel
