@@ -517,7 +517,7 @@ components:
           type: string
           minLength: 1
           description: |
-            Order number assinged by the channel, i.e. the shop.
+            Order number from the channel, i.e. the shop. Every order placed on a channel must have a unique order number.
           example: 12345a
         printTrailOrderNumber:
           type: string
@@ -558,8 +558,6 @@ components:
             - not
           description: |-
             Indicates whether this order can be fulfilled by Print Trail, either fully, partially, or not at all.
-
-            Details TBC..
           example: fully
           readOnly: true
         createdAt:
@@ -572,9 +570,9 @@ components:
         cancelStatus:
           type: string
           description: |-
-            Indicate whether print trail would still accept a cancellation request for this order. Note: even when an order is "cancellable" the cancellation request may still fail.
+            Indicate whether Print Trail would still accept a cancellation request for this order. Note: even when an order is "cancellable" the cancellation request may still fail.
 
-            FIXME: these need some more thought to distibuish between "allowed" vs "allowed but no guarantees" vs "too late".
+            FIXME: these need some more thought to distinguish between "allowed" vs "allowed but no guarantees" vs "too late".
           enum:
             - allowed
             - not-allowed
@@ -607,21 +605,19 @@ components:
     Team:
       type: object
       description: |-
-        Details about the team that publishes and manages the channel.
-
-        This is just a summary at this time. Additional details may be added later.
+        Summary details about the team that owns and manages the channel.
       x-examples: {}
       properties:
         name:
           type: string
           minLength: 1
-          description: The common name of th team or organisation.
-          example: Print Trail Book Publishing
+          description: The common name of the team or organisation.
+          example: Jolly Good Book Publishing
         returnsPolicyUrl:
           type: string
           minLength: 1
           format: uri
-          description: URL to the page providing details about the returns policy.
+          description: URL to the page providing details about the team's returns policy.
           example: 'https://example.com/returns-policy'
         code:
           type: string
@@ -660,7 +656,7 @@ components:
           description: |-
             The state the channel is in:
 
-            * active - the channel can be used to place and checkorders.
+            * active - the channel can be used to place and check orders.
             * inactive - the channel cannot be used to place orders.
 
             Note: additional states may be introduced to indicate varying levels of operation.
@@ -671,10 +667,10 @@ components:
             - live
             - test
           description: |
-            The mode the channel is operatong in.
+            The mode the channel is operating in.
 
-            * live - orders can be placed to live suppliers to be fulfilled.
-            * test - orders will not be placed with live suppliers.
+            * live - orders will be attempted to be processed and dispatched to customers.
+            * test - orders will not result in fulfilments being dispatched to customers.
         lastSyncedAt:
           type: string
           format: date-time
@@ -712,7 +708,7 @@ components:
         sku:
           type: string
           minLength: 1
-          description: The public/shop product sku as registered in Print Trail.
+          description: The public/shop product SKU as registered in Print Trail.
           example: BOOK/HB/abc-123
         type:
           type: string
@@ -760,7 +756,7 @@ components:
             - active
             - inactive
           default: active
-          description: Meanings TBC.
+          description: inactive products cannot be ordered
           readOnly: true
         dimensions:
           $ref: '#/components/schemas/Dimensions'
@@ -784,9 +780,11 @@ components:
     Fulfilment:
       type: object
       description: |-
-        A collection of order lines that will be fulfilled by a single shipment. Order lines from a single order that can be fulfilled by Print Trail will be split into one or more filfilments.
+        A collection of order lines that will be fulfilled by a single production location. Order lines from a single order that can be fulfilled by Print Trail will be split into one or more fulfilments.
 
         Each item is for one original order line.
+        
+        Note the use of British English spelling of 'fulfilment'.
       properties:
         uuid:
           type: string
@@ -987,7 +985,7 @@ components:
           readOnly: true
         message:
           type: string
-          description: 'Human readable error message, suitable for presenting to an end user in context.'
+          description: 'Human-readable error message, suitable for presenting to an end user in context.'
           example: The SKU is not recognised for any available product.
           readOnly: true
         key:
@@ -1191,8 +1189,8 @@ components:
         title:
           type: string
           description: |
-            A short, summary of the problem type. Written in english and readable
-            for engineers (usually not suited for non technical stakeholders and
+            A short, summary of the problem type. Written in English and readable
+            for engineers (usually not suited for non-technical stakeholders and
             not localized); example: Service Unavailable
           example: Not found
         status:
@@ -1208,7 +1206,7 @@ components:
         detail:
           type: string
           description: |
-            A human readable explanation specific to this occurrence of the
+            A human-readable explanation specific to this occurrence of the
             problem.
           example: This order is not in a state (error) that can be confirmed
         instance:
@@ -1256,7 +1254,7 @@ components:
         example: acme-bks
         minLength: 8
         maxLength: 20
-      description: The channel id connecting the shop to the Print Trail client
+      description: The channel id connecting the shop to the Print Trail team
 tags:
   - name: All
   - name: Channel
