@@ -39,7 +39,126 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/OrderResponse'
-              examples: {}
+              examples:
+                example-order-1:
+                  value:
+                    data:
+                      uuid: 7370c4d5-4711-4360-bb1d-bb442262f19d
+                      purchaseOrder: DEPT/123/abc
+                      orderNumber: 12345a
+                      printTrailOrderNumber: ptbp-order-pt-00001234
+                      status: draft
+                      fulfillableStatus: fully
+                      createdAt: '2021-02-23T15:54:53.000000Z'
+                      cancelStatus: allowed
+                      shippingDetails:
+                        postalAddress:
+                          companyName: Consilience
+                          postalCode: NE26 2HU
+                          address1: 305 Whitley Road
+                          address2: North Tyneside
+                          address3: ""
+                          address4: ""
+                          locality: ""
+                          city: Whitley Bay
+                          state:
+                            name: Tyne & Wear
+                            code: NY
+                          country:
+                            name: United Kingdom
+                            code: GB
+                        deliveryContact:
+                          firstName: Jane
+                          lastName: Doe
+                          mobile: +44 7771 123456
+                          phone: +1 987 1234567
+                          email: jane.doe@example.com
+                        note: Leave the item behind the plant pot.
+                      fulfilments:
+                        - uuid: 5ef3ad62-a74f-4ef5-85fe-925ab6f18df7
+                          productionMethod: pod
+                          supplierLocation:
+                            code: uk-northwest
+                            countryCode: GB
+                          status: draft
+                          orderLines:
+                            - quantity: 23
+                              lineNumber: ptbd-order-0001234/004
+                              fulfilmentUuid: 67e8cbd0-282a-4e2a-a44b-9502d53c9d00
+                              product:
+                                name: My Happy Place Book
+                                sku: BOOK/HB/abc-123
+                                type: pod
+                                description: string
+                                additionalDetails:
+                                  - key: number_of_pages
+                                    value: '320'
+                                podEnabled: false
+                                warehouseEnabled: false
+                                activeState: active
+                                dimensions:
+                                  weight:
+                                    measurement: 23
+                                    unit: kg
+                                  length:
+                                    measurement: 23
+                                    unit: mm
+                                  width:
+                                    measurement: 23
+                                    unit: mm
+                                  depth:
+                                    measurement: 23
+                                    unit: mm
+                                price:
+                                  - net:
+                                      currencyCode: GBP
+                                      amountMinorUnits: 1299
+                                uuid: 83b0e08f-aa07-4a5b-b74b-c578bfe89359
+                              price:
+                                itemNet:
+                                  currencyCode: GBP
+                                  amountMinorUnits: 1299
+                      orderLines:
+                        - quantity: 23
+                          lineNumber: ptbd-order-0001234/004
+                          fulfilmentUuid: 67e8cbd0-282a-4e2a-a44b-9502d53c9d00
+                          product:
+                            name: My Happy Place Book
+                            sku: BOOK/HB/abc-123
+                            type: pod
+                            description: A big book of things.
+                            additionalDetails:
+                              - key: number_of_pages
+                                value: '320'
+                            podEnabled: false
+                            warehouseEnabled: false
+                            activeState: active
+                            dimensions:
+                              weight:
+                                measurement: 23
+                                unit: kg
+                              length:
+                                measurement: 23
+                                unit: mm
+                              width:
+                                measurement: 23
+                                unit: mm
+                              depth:
+                                measurement: 23
+                                unit: mm
+                            price:
+                              - net:
+                                  currencyCode: GBP
+                                  amountMinorUnits: 1299
+                            uuid: 83b0e08f-aa07-4a5b-b74b-c578bfe89359
+                          price:
+                            itemNet:
+                              currencyCode: GBP
+                              amountMinorUnits: 1299
+                      errors:
+                        - code: invalid-sku
+                          message: The SKU is not recognised for any available product.
+                          key: ptbd-order-1234-line-002
         '404':
           description: Order Not Found
           content:
@@ -65,7 +184,6 @@ paths:
                     data:
                       uuid: 7370c4d5-4711-4360-bb1d-bb442262f19d
                       purchaseOrder: DEPT/123/abc
-                      phoneNumber: 0191 123456
                       orderNumber: 12345a
                       printTrailOrderNumber: ptbp-order-pt-00001234
                       status: draft
@@ -78,9 +196,9 @@ paths:
                           postalCode: NE26 2HU
                           address1: 305 Whitley Road
                           address2: North Tyneside
-                          address3: string
-                          address4: string
-                          locality: string
+                          address3: ""
+                          address4: ""
+                          locality: ""
                           city: Whitley Bay
                           state:
                             name: Tyne & Wear
@@ -96,12 +214,12 @@ paths:
                           email: fred.east@example.com
                         note: string
                       fulfilments:
-                        - uuid: string
-                          productionMethod: string
+                        - uuid: af6513a1-112b-4184-aeac-e3ab5c99cb38
+                          productionMethod: warehouse
                           supplierLocation:
                             code: uk-northwest
                             countryCode: GB
-                          status: string
+                          status: processing
                           orderLines:
                             - quantity: 23
                               lineNumber: ptbd-order-0001234/004
@@ -137,6 +255,8 @@ paths:
                         - code: invalid-sku
                           message: The SKU is not recognised for any available product.
                           key: ptbd-order-1234-line-002
+        '400':
+          description: Bad Request
         '422':
           description: Validation Error
           content:
@@ -163,7 +283,6 @@ paths:
               example-1:
                 value:
                   purchaseOrder: DEPT/123/abc
-                  phoneNumber: 0191 123456
                   orderNumber: 12345a
                   status: draft
                   shippingDetails:
@@ -172,9 +291,9 @@ paths:
                       postalCode: NE26 2HU
                       address1: 305 Whitley Road
                       address2: North Tyneside
-                      address3: string
-                      address4: string
-                      locality: string
+                      address3: ""
+                      address4: ""
+                      locality: ""
                       city: Whitley Bay
                       state:
                         name: Tyne & Wear
@@ -288,11 +407,11 @@ paths:
                   value:
                     data:
                       id: webt-cha
-                      name: string
+                      name: Web Team Channels
                       state: active
                       mode: live
                       lastSyncedAt: '2019-08-24T14:15:22Z'
-                      webhookUrl: string
+                      webhookUrl: https://wxample.com/
                       code: cha
         '404':
           description: Not Found
@@ -508,11 +627,6 @@ components:
             Note: may not be supported from the start.
           example: DEPT/123/abc
           maxLength: 50
-        phoneNumber:
-          type: string
-          description: TBC. The shipping contact has its own phone number.
-          example: 0191 123456
-          maxLength: 50
         orderNumber:
           type: string
           minLength: 1
@@ -702,7 +816,7 @@ components:
       readOnly: true
     Product:
       type: object
-      description: ''
+      description: A product fulfilled by Print Trail.
       properties:
         name:
           type: string
@@ -775,6 +889,7 @@ components:
           type: string
           format: uuid
           description: Can be used as an alternative to SKU when writing order lines.
+          example: 83b0e08f-aa07-4a5b-b74b-c578bfe89359
       required:
         - name
         - type
@@ -792,14 +907,31 @@ components:
           type: string
           minLength: 1
           description: The globally unique ID of the fulfilment.
+          example: e4a5968e-3756-460e-85ab-0a8de249dac0
         productionMethod:
           type: string
           minLength: 1
+          enum:
+            - pod
+            - warehouse
+          example: pod
         supplierLocation:
           $ref: '#/components/schemas/SupplierLocation'
         status:
           type: string
           minLength: 1
+          enum:
+            - draft
+            - processing
+            - dispatched
+            - cancelled
+            - returned
+            - invalid
+            - failed
+            - error
+            - holding
+            - back-order
+          example: draft
         orderLines:
           type: array
           minItems: 1
@@ -850,6 +982,9 @@ components:
           $ref: '#/components/schemas/State'
         country:
           $ref: '#/components/schemas/Country'
+      required:
+        - address1
+        - country
     Contact:
       title: Contact
       type: object
@@ -921,21 +1056,37 @@ components:
         - first
         - last
     PagerMeta:
-      title: PagerMeta
       type: object
+      title: PagerMeta
       properties:
         current_page:
           type: integer
+          example: 2
+          description: The number of the current page returned by this query and selection.
         from:
           type: integer
+          description: The first record number on the page.
+          example: 1
         path:
           type: string
+          description: The root path to this index page.
         per_page:
           type: integer
+          example: 50
+          description: The number of records each page can contain.
         to:
           type: integer
+          description: The last record number on the page.
+          example: 50
         total:
           type: integer
+          description: The total number of records this search matches.
+          example: 477
+        last_page:
+          type: integer
+          description: The last page number for this query.
+          example: 7
+      readOnly: true
     OrderLine:
       title: OrderLine
       type: object
@@ -959,7 +1110,8 @@ components:
         fulfilmentUuid:
           type: string
           format: uuid
-          description: The filfilment UUDI if the orderline is fulfilled (this includes draft fulfilments).
+          description: The filfilment UUID if the orderline is fulfilled (this includes draft fulfilments).
+          readOnly: true
         product:
           $ref: '#/components/schemas/Product'
         price:
@@ -1116,11 +1268,13 @@ components:
           type: string
           minLength: 1
           example: United Kingdom
-          readOnly: true
         code:
           type: string
           minLength: 1
-          description: ISO 3166-1 alpha-2 country code
+          description: |-
+            ISO 3166-1 alpha-2 country code.
+
+            When creating an order, the ISO 3166-1 alpha-3 code can also be supplied, but Print Trail will always return the alpha-2 code.
           example: GB
     State:
       title: State
@@ -1219,6 +1373,12 @@ components:
             It may or may not yield further information if dereferenced.
 
             Not yet used in this API.
+        violations:
+          type: array
+          description: List of validation errors.
+          items:
+            $ref: '#/components/schemas/ProblemViolation'
+          readOnly: true
       readOnly: true
     ProductPrice:
       title: ProductPrice
@@ -1240,6 +1400,21 @@ components:
         The price components for an order line, as declared by the shop. These may differ from the product price (where that is even known) since they relate to what was charged for this order, including current discounts and specific taxes.
 
         Full details for this object TBC.
+    ProblemViolation:
+      type: object
+      title: ProblemViolation
+      description: A validation error.
+      properties:
+        property:
+          type: string
+          example: shippingDetails.postalAddress
+          readOnly: true
+        message:
+          type: string
+          description: Human readable message.
+          example: The shipping details.postal address.country.code may not be greater than 3 characters.
+          readOnly: true
+      readOnly: true
   securitySchemes:
     ChannelApiKey:
       type: http
