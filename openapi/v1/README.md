@@ -1,6 +1,6 @@
 # Print Trail Channel API v1
 
-This OpenAPI description is the first iterarion describing the channel API, used by shops and other e-commerce applications to place and track orders.
+This OpenAPI description is the first iteration describing the Print Trail Channel API, used by shops and other e-commerce applications to place and track orders.
 
 For now, the API description is in a single file, uses OpenAPI spec v3.0.0
 
