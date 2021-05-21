@@ -48,7 +48,7 @@ paths:
                       orderNumber: 12345a
                       printTrailOrderNumber: ptbp-order-pt-00001234
                       status: draft
-                      fulfillableStatus: fully
+                      fulfillableStatus: draft
                       createdAt: '2021-02-23T15:54:53.000000Z'
                       cancelStatus: allowed
                       shippingDetails:
@@ -57,9 +57,9 @@ paths:
                           postalCode: NE26 2HU
                           address1: 305 Whitley Road
                           address2: North Tyneside
-                          address3: ""
-                          address4: ""
-                          locality: ""
+                          address3: ''
+                          address4: ''
+                          locality: ''
                           city: Whitley Bay
                           state:
                             name: Tyne & Wear
@@ -187,7 +187,7 @@ paths:
                       orderNumber: 12345a
                       printTrailOrderNumber: ptbp-order-pt-00001234
                       status: draft
-                      fulfillableStatus: fully
+                      fulfillableStatus: fulfillable
                       createdAt: '2021-02-23T15:54:53.000000Z'
                       cancelStatus: allowed
                       shippingDetails:
@@ -196,9 +196,9 @@ paths:
                           postalCode: NE26 2HU
                           address1: 305 Whitley Road
                           address2: North Tyneside
-                          address3: ""
-                          address4: ""
-                          locality: ""
+                          address3: ''
+                          address4: ''
+                          locality: ''
                           city: Whitley Bay
                           state:
                             name: Tyne & Wear
@@ -291,9 +291,9 @@ paths:
                       postalCode: NE26 2HU
                       address1: 305 Whitley Road
                       address2: North Tyneside
-                      address3: ""
-                      address4: ""
-                      locality: ""
+                      address3: ''
+                      address4: ''
+                      locality: ''
                       city: Whitley Bay
                       state:
                         name: Tyne & Wear
@@ -411,7 +411,7 @@ paths:
                       state: active
                       mode: live
                       lastSyncedAt: '2019-08-24T14:15:22Z'
-                      webhookUrl: https://wxample.com/
+                      webhookUrl: 'https://wxample.com/'
                       code: cha
         '404':
           description: Not Found
@@ -542,6 +542,11 @@ paths:
       tags:
         - Order
         - All
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderConfirmDetails'
   '/v1/channels/{channelId}/orders/{orderUuid}/cancel':
     parameters:
       - $ref: '#/components/parameters/channelId'
@@ -666,13 +671,21 @@ components:
           minLength: 1
           enum:
             - draft
+            - fulfillable
+            - partially_fulfillable
+            - not_fulfillable
             - error
-            - fully
-            - partially
-            - not
           description: |-
-            Indicates whether this order can be fulfilled by Print Trail, either fully, partially, or not at all.
-          example: fully
+            Indicates whether this order can be fulfilled by Print Trail, either fully, partially, or not at all. Only fulfillable orders can be confirmed - no partial orders will be processed.
+
+            Values are:
+
+            * `draft` - still being processed.
+            * `fulfillable` - the complete order is fulfillable and draft fulfilments have been created.
+            * `partially_fulfillable` - some of the order lines can be fulfilled, but not all. Draft fulfilments have been created for those that can, but the order cannot  be progressed.
+            * `not_fulfillable` - no order line can be fulfilled for this order.
+            * `error` - an error was encountered while trying to calculate the fulfilments. The `errors` array will provide further details.
+          example: fulfillable
           readOnly: true
         createdAt:
           type: string
@@ -694,7 +707,7 @@ components:
             - cancelled
           readOnly: true
         shippingDetails:
-          $ref: '#/components/schemas/ShippingDetails'
+          $ref: '#/components/schemas/OrderShippingDetails'
         fulfilments:
           type: array
           uniqueItems: true
@@ -718,8 +731,7 @@ components:
           readOnly: true
     Team:
       type: object
-      description: |-
-        Summary details about the team that owns and manages the channel.
+      description: Summary details about the team that owns and manages the channel.
       x-examples: {}
       properties:
         name:
@@ -898,7 +910,7 @@ components:
         A collection of order lines that will be fulfilled by a single production location. Order lines from a single order that can be fulfilled by Print Trail will be split into one or more fulfilments.
 
         Each item is for one original order line.
-        
+
         Note the use of British English spelling of 'fulfilment'.
       properties:
         uuid:
@@ -935,12 +947,30 @@ components:
           minItems: 1
           items:
             $ref: '#/components/schemas/OrderLine'
+        availableShippingMethods:
+          type: array
+          minItems: 0
+          items:
+            type: string
+            pattern: '^[a-z0-9-]+$'
+            minLength: 1
+            maxLength: 60
+          readOnly: true
+          example:
+            - standard
+            - express
+        requestedShippingMethod:
+          type: string
+          pattern: '^[a-z0-9-]+$'
+          minLength: 1
+          maxLength: 60
       required:
         - uuid
         - productionMethod
         - supplierLocation
         - status
         - orderLines
+        - availableShippingMethods
       readOnly: true
     PostalAddress:
       type: object
@@ -1154,10 +1184,11 @@ components:
         - code
         - message
       readOnly: true
-    ShippingDetails:
-      title: ShippingDetails
+    OrderShippingDetails:
+      title: OrderShippingDetails
       type: object
       description: Shipping details for an order.
+      x-internal: false
       properties:
         postalAddress:
           $ref: '#/components/schemas/PostalAddress'
@@ -1413,6 +1444,51 @@ components:
           example: The shipping details.postal address.country.code may not be greater than 3 characters.
           readOnly: true
       readOnly: true
+    ConfirmShippingDetails:
+      type: object
+      title: ConfirmShippingDetails
+      properties:
+        fulfilmentUuid:
+          type: string
+          format: uuid
+          description: The fulfilment UUID.
+          example: f0182a12-b5a8-4997-bb33-773932afc53d
+        shippingMethod:
+          type: string
+          pattern: '^[a-z0-9-]+$'
+          minLength: 1
+          maxLength: 60
+          description: The shipping method to use for this fulfilment.
+          example: express
+      required:
+        - fulfilmentUuid
+        - shippingMethod
+      writeOnly: true
+    OrderConfirmDetails:
+      type: object
+      title: OrderConfirmDetails
+      description: Additional details to add during the draft order confirm request.
+      properties:
+        fulfilmentShippingMethods:
+          type: array
+          minItems: 0
+          description: Allows each filfilment to get its own desired shipping method.
+          items:
+            $ref: '#/components/schemas/ConfirmShippingDetails'
+        defaultShippingMethod:
+          type: string
+          description: The shipping method to use for any fulfilment that does not have its own specific shipping method.
+          pattern: '^[a-z0-9-]+$'
+          maxLength: 60
+          minLength: 1
+          example: standard
+          writeOnly: true
+      writeOnly: true
+      x-examples:
+        example-1:
+          fulfilmentShippingMethods:
+            - fulfilmentUuid: f0182a12-b5a8-4997-bb33-773932afc53d
+              shippingMethod: express
   securitySchemes:
     ChannelApiKey:
       type: http
