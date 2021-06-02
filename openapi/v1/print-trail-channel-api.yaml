@@ -81,6 +81,8 @@ paths:
                             code: uk-northwest
                             countryCode: GB
                           status: draft
+                          availableShippingMethods:
+                            - standard
                           orderLines:
                             - quantity: 23
                               lineNumber: ptbd-order-0001234/004
@@ -220,6 +222,8 @@ paths:
                             code: uk-northwest
                             countryCode: GB
                           status: processing
+                          availableShippingMethods:
+                            - standard
                           orderLines:
                             - quantity: 23
                               lineNumber: ptbd-order-0001234/004
@@ -615,7 +619,158 @@ components:
     Order:
       type: object
       description: ''
-      x-examples: {}
+      x-examples:
+        example-oeder-draft-response:
+          uuid: 7370c4d5-4711-4360-bb1d-bb442262f19d
+          purchaseOrder: DEPT/123/abc
+          orderNumber: 12345a
+          printTrailOrderNumber: ptbp-order-pt-00001234
+          status: draft
+          fulfillableStatus: fulfillable
+          createdAt: '2021-02-23T15:54:53.000000Z'
+          cancelStatus: allowed
+          shippingDetails:
+            postalAddress:
+              companyName: Consilience
+              postalCode: NE26 2HU
+              address1: 305 Whitley Road
+              address2: North Tyneside
+              address3: string
+              address4: string
+              locality: string
+              city: Whitley Bay
+              state:
+                name: Tyne & Wear
+                code: NY
+              country:
+                name: United Kingdom
+                code: GB
+            deliveryContact:
+              firstName: Jane
+              lastName: Doe
+              mobile: +44 7771 123456
+              phone: +1 987 1234567
+              email: jane.doe@example.com
+            note: Leave the item behind the plant pot.
+          fulfilments:
+            - uuid: e4a5968e-3756-460e-85ab-0a8de249dac0
+              productionMethod: pod
+              supplierLocation:
+                code: uk-northwest
+                countryCode: GB
+              status: draft
+              orderLines:
+                - quantity: 23
+                  lineNumber: ptbd-order-0001234/004
+                  fulfilmentUuid: 67e8cbd0-282a-4e2a-a44b-9502d53c9d00
+                  product:
+                    name: My Happy Place Book
+                    sku: BOOK/HB/abc-123
+                    type: pod
+                    description: string
+                    additionalDetails:
+                      - key: number_of_pages
+                        value: '320'
+                    podEnabled: false
+                    warehouseEnabled: false
+                    activeState: active
+                    dimensions:
+                      weight:
+                        measurement: 23
+                        unit: kg
+                      length:
+                        measurement: 23
+                        unit: mm
+                      width:
+                        measurement: 23
+                        unit: mm
+                      depth:
+                        measurement: 23
+                        unit: mm
+                    price:
+                      - net:
+                          currencyCode: GBP
+                          amountMinorUnits: 1299
+                    uuid: 83b0e08f-aa07-4a5b-b74b-c578bfe89359
+                  price:
+                    itemNet:
+                      currencyCode: GBP
+                      amountMinorUnits: 1299
+              availableShippingMethods:
+                - standard
+                - express
+              requestedShippingMethod: string
+          orderLines:
+            - quantity: 23
+              lineNumber: ptbd-order-0001234/004
+              fulfilmentUuid: 67e8cbd0-282a-4e2a-a44b-9502d53c9d00
+              product:
+                name: My Happy Place Book
+                sku: BOOK/HB/abc-123
+                type: pod
+                description: string
+                additionalDetails:
+                  - key: number_of_pages
+                    value: '320'
+                podEnabled: false
+                warehouseEnabled: false
+                activeState: active
+                dimensions:
+                  weight:
+                    measurement: 23
+                    unit: kg
+                  length:
+                    measurement: 23
+                    unit: mm
+                  width:
+                    measurement: 23
+                    unit: mm
+                  depth:
+                    measurement: 23
+                    unit: mm
+                price:
+                  - net:
+                      currencyCode: GBP
+                      amountMinorUnits: 1299
+                uuid: 83b0e08f-aa07-4a5b-b74b-c578bfe89359
+              price:
+                itemNet:
+                  currencyCode: GBP
+                  amountMinorUnits: 1299
+          errors:
+            - code: invalid-sku
+              message: The SKU is not recognised for any available product.
+              key: ptbd-order-1234-line-002
+        example-order-create:
+          uuid: 7370c4d5-4711-4360-bb1d-bb442262f19d
+          purchaseOrder: DEPT/123/abc
+          orderNumber: 12345a
+          shippingDetails:
+            postalAddress:
+              companyName: Consilience
+              postalCode: NE26 2HU
+              address1: 305 Whitley Road
+              address2: North Tyneside
+              address3: string
+              address4: string
+              locality: string
+              city: Whitley Bay
+              state:
+                name: Tyne & Wear
+              country:
+                code: GB
+            deliveryContact:
+              firstName: Jane
+              lastName: Doe
+              mobile: +44 7771 123456
+              phone: +1 987 1234567
+              email: jane.doe@example.com
+            note: Leave the item behind the plant pot.
+          orderLines:
+            - quantity: 23
+              lineNumber: ptbd-order-0001234/004
+              product:
+                sku: BOOK/HB/abc-123
       title: ''
       properties:
         uuid:
@@ -824,7 +979,10 @@ components:
       readOnly: true
     Product:
       type: object
-      description: A product fulfilled by Print Trail.
+      description: |-
+        A product fulfilled by Print Trail.
+
+        When creating an order, send the product with an SKU or UUID only. All other properties will be ignored.
       properties:
         name:
           type: string
@@ -904,6 +1062,40 @@ components:
         - description
         - additionalDetails
         - activeState
+      x-examples:
+        example-product-response:
+          name: My Happy Place Book
+          sku: BOOK/HB/abc-123
+          type: pod
+          description: string
+          additionalDetails:
+            - key: number_of_pages
+              value: '320'
+          podEnabled: false
+          warehouseEnabled: false
+          activeState: active
+          dimensions:
+            weight:
+              measurement: 23
+              unit: kg
+            length:
+              measurement: 23
+              unit: mm
+            width:
+              measurement: 23
+              unit: mm
+            depth:
+              measurement: 23
+              unit: mm
+          price:
+            - net:
+                currencyCode: GBP
+                amountMinorUnits: 1299
+          uuid: 83b0e08f-aa07-4a5b-b74b-c578bfe89359
+        example-product-orderline-request-sku:
+          sku: BOOK/HB/abc-123
+        example-product-orderline-request-uuid:
+          uuid: 83b0e08f-aa07-4a5b-b74b-c578bfe89359
     Fulfilment:
       type: object
       description: |-
@@ -950,15 +1142,15 @@ components:
         availableShippingMethods:
           type: array
           minItems: 0
+          example:
+            - standard
+            - express
           items:
             type: string
             pattern: '^[a-z0-9-]+$'
             minLength: 1
             maxLength: 60
           readOnly: true
-          example:
-            - standard
-            - express
         requestedShippingMethod:
           type: string
           pattern: '^[a-z0-9-]+$'
@@ -1118,7 +1310,10 @@ components:
     OrderLine:
       title: OrderLine
       type: object
-      description: The details of an order line provided by the shop.
+      description: |-
+        The details of an order line provided by the shop.
+
+        When creating an order, each orderLine should contain only a quantity, line number and a product with just an SKU or UUID. The line number identifies the original order line on the shop or e-commerce application, within the context of the order. Any string format can be used, so long as each order line has a unique lineNumber within an order.
       properties:
         quantity:
           type: number
@@ -1147,6 +1342,49 @@ components:
       required:
         - quantity
         - lineNumber
+      x-examples:
+        example-orderline-response:
+          quantity: 23
+          lineNumber: ptbd-order-0001234/004
+          fulfilmentUuid: 67e8cbd0-282a-4e2a-a44b-9502d53c9d00
+          product:
+            name: My Happy Place Book
+            sku: BOOK/HB/abc-123
+            type: pod
+            description: string
+            additionalDetails:
+              - key: number_of_pages
+                value: '320'
+            podEnabled: false
+            warehouseEnabled: false
+            activeState: active
+            dimensions:
+              weight:
+                measurement: 23
+                unit: kg
+              length:
+                measurement: 23
+                unit: mm
+              width:
+                measurement: 23
+                unit: mm
+              depth:
+                measurement: 23
+                unit: mm
+            price:
+              - net:
+                  currencyCode: GBP
+                  amountMinorUnits: 1299
+            uuid: 83b0e08f-aa07-4a5b-b74b-c578bfe89359
+          price:
+            itemNet:
+              currencyCode: GBP
+              amountMinorUnits: 1299
+        example-orderline -create-order:
+          quantity: 23
+          lineNumber: ptbd-order-0001234/004
+          product:
+            sku: BOOK/HB/abc-123
     ErrorDetail:
       type: object
       title: ErrorDetail
