@@ -181,7 +181,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/OrderResponse'
               examples:
-                example-order-created:
+                example-draft-order-created:
                   value:
                     data:
                       uuid: 7370c4d5-4711-4360-bb1d-bb442262f19d
@@ -284,11 +284,10 @@ paths:
             schema:
               $ref: '#/components/schemas/Order'
             examples:
-              example-1:
+              example-order-create:
                 value:
                   purchaseOrder: DEPT/123/abc
                   orderNumber: 12345a
-                  status: draft
                   shippingDetails:
                     postalAddress:
                       companyName: Consilience
@@ -301,10 +300,8 @@ paths:
                       city: Whitley Bay
                       state:
                         name: Tyne & Wear
-                        code: NY
                       country:
                         name: United Kingdom
-                        code: GB
                     deliveryContact:
                       firstName: Jane
                       lastName: Doe
@@ -827,8 +824,8 @@ components:
           enum:
             - draft
             - fulfillable
-            - partially_fulfillable
-            - not_fulfillable
+            - partially-fulfillable
+            - not-fulfillable
             - error
           description: |-
             Indicates whether this order can be fulfilled by Print Trail, either fully, partially, or not at all. Only fulfillable orders can be confirmed - no partial orders will be processed.
@@ -837,8 +834,8 @@ components:
 
             * `draft` - still being processed.
             * `fulfillable` - the complete order is fulfillable and draft fulfilments have been created.
-            * `partially_fulfillable` - some of the order lines can be fulfilled, but not all. Draft fulfilments have been created for those that can, but the order cannot  be progressed.
-            * `not_fulfillable` - no order line can be fulfilled for this order.
+            * `partially-fulfillable` - some of the order lines can be fulfilled, but not all. Draft fulfilments have been created for those that can, but the order cannot  be progressed.
+            * `not-fulfillable` - no order line can be fulfilled for this order.
             * `error` - an error was encountered while trying to calculate the fulfilments. The `errors` array will provide further details.
           example: fulfillable
           readOnly: true
@@ -1156,6 +1153,7 @@ components:
           pattern: '^[a-z0-9-]+$'
           minLength: 1
           maxLength: 60
+          example: express
       required:
         - uuid
         - productionMethod
