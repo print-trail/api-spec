@@ -497,6 +497,7 @@ paths:
           in: query
           name: uuid
           description: Match a specific product UUID
+          style: form
         - schema:
             type: string
             example: My % Book
@@ -509,6 +510,17 @@ paths:
           in: query
           name: sku
           description: 'Match a product SKU, with wildcard support'
+        - schema:
+            type: string
+            example: 'active,pre-order'
+            enum:
+              - active
+              - inactive
+              - pre-order
+          in: query
+          name: active-state
+          description: Select only products of the given state or states
+          style: form
   '/v1/channels/{channelId}/orders/{orderUuid}/confirm':
     parameters:
       - $ref: '#/components/parameters/channelId'
@@ -980,6 +992,40 @@ components:
         A product fulfilled by Print Trail.
 
         When creating an order, send the product with an SKU or UUID only. All other properties will be ignored.
+      x-examples:
+        example-product-response:
+          name: My Happy Place Book
+          sku: BOOK/HB/abc-123
+          type: pod
+          description: string
+          additionalDetails:
+            - key: number_of_pages
+              value: '320'
+          podEnabled: false
+          warehouseEnabled: false
+          activeState: active
+          dimensions:
+            weight:
+              measurement: 23
+              unit: kg
+            length:
+              measurement: 23
+              unit: mm
+            width:
+              measurement: 23
+              unit: mm
+            depth:
+              measurement: 23
+              unit: mm
+          price:
+            - net:
+                currencyCode: GBP
+                amountMinorUnits: 1299
+          uuid: 83b0e08f-aa07-4a5b-b74b-c578bfe89359
+        example-product-orderline-request-sku:
+          sku: BOOK/HB/abc-123
+        example-product-orderline-request-uuid:
+          uuid: 83b0e08f-aa07-4a5b-b74b-c578bfe89359
       properties:
         name:
           type: string
@@ -1036,8 +1082,14 @@ components:
           enum:
             - active
             - inactive
+            - pre-order
           default: active
-          description: inactive products cannot be ordered
+          description: |-
+            `active` orders are available for immediate order.
+
+            `inactive` products cannot be ordered, though can still be seen as a part of existing orders.
+
+            `pre-order` products can be ordered, but the whole order will be held up until the stock is availabe for shipping.
           readOnly: true
         dimensions:
           $ref: '#/components/schemas/Dimensions'
@@ -1059,40 +1111,6 @@ components:
         - description
         - additionalDetails
         - activeState
-      x-examples:
-        example-product-response:
-          name: My Happy Place Book
-          sku: BOOK/HB/abc-123
-          type: pod
-          description: string
-          additionalDetails:
-            - key: number_of_pages
-              value: '320'
-          podEnabled: false
-          warehouseEnabled: false
-          activeState: active
-          dimensions:
-            weight:
-              measurement: 23
-              unit: kg
-            length:
-              measurement: 23
-              unit: mm
-            width:
-              measurement: 23
-              unit: mm
-            depth:
-              measurement: 23
-              unit: mm
-          price:
-            - net:
-                currencyCode: GBP
-                amountMinorUnits: 1299
-          uuid: 83b0e08f-aa07-4a5b-b74b-c578bfe89359
-        example-product-orderline-request-sku:
-          sku: BOOK/HB/abc-123
-        example-product-orderline-request-uuid:
-          uuid: 83b0e08f-aa07-4a5b-b74b-c578bfe89359
     Fulfilment:
       type: object
       description: |-
