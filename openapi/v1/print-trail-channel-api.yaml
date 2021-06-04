@@ -28,7 +28,7 @@ paths:
         required: true
       - $ref: '#/components/parameters/channelId'
     get:
-      summary: Get order
+      summary: Get an Order
       tags:
         - Order
         - All
@@ -171,7 +171,7 @@ paths:
       description: Retrieve the information of the order with the matching order UUID.
   '/v1/channels/{channelId}/orders':
     post:
-      summary: Create new draft order
+      summary: Create New Draft Order
       operationId: createOrder
       responses:
         '201':
@@ -366,7 +366,7 @@ paths:
         - All
   '/v1/channels/{channelId}/team':
     get:
-      summary: Get team info
+      summary: Get Team Info
       tags:
         - Team
         - All
@@ -392,7 +392,7 @@ paths:
     parameters:
       - $ref: '#/components/parameters/channelId'
     get:
-      summary: Get channel info
+      summary: Get Channel Info
       tags:
         - Channel
         - All
@@ -569,7 +569,7 @@ paths:
         in: path
         required: true
     put:
-      summary: ''
+      summary: Cancel Order
       operationId: cancelOrder
       responses:
         '200':
@@ -606,7 +606,7 @@ paths:
         required: true
         description: Selects the product
     get:
-      summary: Your GET endpoint
+      summary: Get a Product
       tags: []
       responses:
         '200':
