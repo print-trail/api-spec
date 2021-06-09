@@ -360,7 +360,32 @@ paths:
           in: query
           name: page
           description: The page number of the result set
-      description: Select a collection of matching orders.
+        - schema:
+            type: string
+            example: 'draft,processing'
+          in: query
+          name: status
+          description: Match a specific status or comma-separated list o statuses
+          style: form
+          allowEmptyValue: true
+        - schema:
+            type: string
+            format: date-time
+            example: '2021-06-09T22:11:54'
+          in: query
+          name: created-since
+          description: Match orders that were created on or after the given date-time
+        - schema:
+            type: string
+            example: '2021-04-01T00:00:00'
+            format: date-time
+          in: query
+          name: updated-since
+          description: Match orders that were updated on or after the given date-time
+      description: |-
+        Select a collection of matching orders.
+
+        All matching orders will be ordered by created_at timestamp.
       tags:
         - Order
         - All
@@ -512,7 +537,7 @@ paths:
           description: 'Match a product SKU, with wildcard support'
         - schema:
             type: string
-            example: 'active,pre-order'
+            example: 'pre-order'
             enum:
               - active
               - inactive
@@ -574,6 +599,16 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponse'
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponse'
         '400':
           description: Bad Request
           content:
@@ -853,10 +888,9 @@ components:
           readOnly: true
         createdAt:
           type: string
-          minLength: 1
           format: date-time
-          description: Timestamp for when this order was first created.
-          example: '2021-02-23T15:54:53.000000Z'
+          example: '2021-06-09T22:11:54.000000Z'
+          description: The time the order was first created.
           readOnly: true
         cancelStatus:
           type: string
@@ -892,6 +926,12 @@ components:
           description: Errors related to this order
           items:
             $ref: '#/components/schemas/ErrorDetail'
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          example: '2021-06-09T22:11:54+00:00'
+          description: 'The time the order was difectly last updated, for example confirmed, created, or had its status changed in soem other way.'
           readOnly: true
     Team:
       type: object
