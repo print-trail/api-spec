@@ -1,3 +1,0 @@
-# Markdown?
-
-*Or not?*
