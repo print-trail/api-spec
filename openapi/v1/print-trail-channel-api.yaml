@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: channel
-  version: 1.0.0-dev
+  version: 1.0.1
   description: '[Open API spec](https://github.com/print-trail/api-spec/blob/main/openapi/v1/print-trail-channel-api.yaml) for Print Trail API'
   contact:
     name: Hansen Salim
