@@ -82,7 +82,9 @@ paths:
                             countryCode: GB
                           status: draft
                           availableShippingMethods:
-                            - standard
+                            - shippingMethod:
+                                code: standard
+                                name: Standard
                           orderLines:
                             - quantity: 23
                               lineNumber: ptbd-order-0001234/004
@@ -223,7 +225,9 @@ paths:
                             countryCode: GB
                           status: processing
                           availableShippingMethods:
-                            - standard
+                            - shippingMethod:
+                                code: standard
+                                name: Standard
                           orderLines:
                             - quantity: 23
                               lineNumber: ptbd-order-0001234/004
@@ -537,7 +541,7 @@ paths:
           description: 'Match a product SKU, with wildcard support'
         - schema:
             type: string
-            example: 'pre-order'
+            example: pre-order
             enum:
               - active
               - inactive
@@ -664,7 +668,7 @@ components:
       type: object
       description: ''
       x-examples:
-        example-oeder-draft-response:
+        example-order-draft-response:
           uuid: 7370c4d5-4711-4360-bb1d-bb442262f19d
           purchaseOrder: DEPT/123/abc
           orderNumber: 12345a
@@ -741,8 +745,12 @@ components:
                       currencyCode: GBP
                       amountMinorUnits: 1299
               availableShippingMethods:
-                - standard
-                - express
+                - shippingMethod:
+                    code: standard
+                    name: Standard
+                - shippingMethod:
+                    code: express
+                    name: Express
               requestedShippingMethod: string
           orderLines:
             - quantity: 23
@@ -815,7 +823,7 @@ components:
               lineNumber: ptbd-order-0001234/004
               product:
                 sku: BOOK/HB/abc-123
-      title: ''
+      title: Order
       properties:
         uuid:
           type: string
@@ -966,7 +974,7 @@ components:
     Channel:
       type: object
       description: Overall details and metadata for a channel.
-      title: ''
+      title: Channel
       properties:
         id:
           type: string
@@ -1151,6 +1159,7 @@ components:
         - description
         - additionalDetails
         - activeState
+      title: Product
     Fulfilment:
       type: object
       description: |-
@@ -1159,6 +1168,7 @@ components:
         Each item is for one original order line.
 
         Note the use of British English spelling of 'fulfilment'.
+      title: Fulfilment
       properties:
         uuid:
           type: string
@@ -1200,18 +1210,12 @@ components:
           example:
             - standard
             - express
+          description: A list of shipping methods that this fulfilment supports.
           items:
-            type: string
-            pattern: '^[a-z0-9-]+$'
-            minLength: 1
-            maxLength: 60
+            $ref: '#/components/schemas/ShippingMethod'
           readOnly: true
         requestedShippingMethod:
-          type: string
-          pattern: '^[a-z0-9-]+$'
-          minLength: 1
-          maxLength: 60
-          example: express
+          $ref: '#/components/schemas/ShippingMethod'
       required:
         - uuid
         - productionMethod
@@ -1222,7 +1226,7 @@ components:
       readOnly: true
     PostalAddress:
       type: object
-      title: PostalAddress
+      title: Postal Address
       description: A postal address for a shipment. This model is used to both set and inspect the postal address for a fulfilment.
       properties:
         companyName:
@@ -1290,14 +1294,14 @@ components:
       required:
         - firstName
     OrderResponse:
-      title: OrderResponse
+      title: Order Response
       type: object
       description: A single order wrapped as an API response.
       properties:
         data:
           $ref: '#/components/schemas/Order'
     ProductSearchResponse:
-      title: ProductsResponse
+      title: Products Response
       type: object
       description: Mutiple products wrapped in a response API with pager details.
       properties:
@@ -1310,7 +1314,7 @@ components:
         links:
           $ref: '#/components/schemas/PagerLinks'
     PagerLinks:
-      title: PagerLinks
+      title: Pager Links
       type: object
       description: Meta pagination links within
       properties:
@@ -1333,7 +1337,7 @@ components:
         - last
     PagerMeta:
       type: object
-      title: PagerMeta
+      title: Pager Meta
       properties:
         current_page:
           type: integer
@@ -1364,7 +1368,7 @@ components:
           example: 7
       readOnly: true
     OrderLine:
-      title: OrderLine
+      title: Order Line
       type: object
       description: |-
         The details of an order line provided by the shop.
@@ -1443,7 +1447,7 @@ components:
             sku: BOOK/HB/abc-123
     ErrorDetail:
       type: object
-      title: ErrorDetail
+      title: Error Detail
       description: |-
         Details for a single error.
 
@@ -1479,7 +1483,7 @@ components:
         - message
       readOnly: true
     OrderShippingDetails:
-      title: OrderShippingDetails
+      title: Order Shipping Details
       type: object
       description: Shipping details for an order.
       x-internal: false
@@ -1497,21 +1501,21 @@ components:
           example: Leave the item behind the plant pot.
           maxLength: 200
     ChannelResponse:
-      title: ChannelResponse
+      title: Channel Response
       type: object
       properties:
         data:
           $ref: '#/components/schemas/Channel'
       description: A single channel detail.
     TeamResponse:
-      title: TeamResponse
+      title: Team Response
       type: object
       properties:
         data:
           $ref: '#/components/schemas/Team'
       description: A single team wrapped in an API response.
     MeasurementMass:
-      title: MeasurementMass
+      title: Measurement Mass
       type: object
       description: A single mass measurement of a given unit.
       properties:
@@ -1530,7 +1534,7 @@ components:
         - measurement
         - unit
     MeasurementLength:
-      title: MeasurementLength
+      title: Measurement Length
       type: object
       description: A single length measurement of a given unit.
       properties:
@@ -1563,7 +1567,7 @@ components:
           $ref: '#/components/schemas/MeasurementLength'
       readOnly: true
     MoneyAmount:
-      title: MoneyAmount
+      title: Money Amount
       type: object
       description: A monetary amount with a value and a currency.
       properties:
@@ -1613,7 +1617,7 @@ components:
           example: NY
           description: 'The abbreviation or code for the state or province, where it applies (and is commonly used in addressing).'
     SupplierLocation:
-      title: SupplierLocation
+      title: Supplier Location
       type: object
       description: 'Details of the supplier location, where fulfilments will be shipped from.'
       properties:
@@ -1630,7 +1634,7 @@ components:
       required:
         - code
     OrderSearchResponse:
-      title: OrderSearchResponse
+      title: Order Search Response
       type: object
       description: The results of selecting for a page of orders.
       properties:
@@ -1643,7 +1647,7 @@ components:
         links:
           $ref: '#/components/schemas/PagerLinks'
     ProductResponse:
-      title: ProductResponse
+      title: Product Response
       type: object
       properties:
         data:
@@ -1703,8 +1707,9 @@ components:
             $ref: '#/components/schemas/ProblemViolation'
           readOnly: true
       readOnly: true
+      title: Problem
     ProductPrice:
-      title: ProductPrice
+      title: Product Price
       type: object
       description: |-
         All price details for a product, as known by Print Trail.
@@ -1714,7 +1719,7 @@ components:
         net:
           $ref: '#/components/schemas/MoneyAmount'
     OrderLinePrice:
-      title: OrderLinePrice
+      title: Order Line Price
       type: object
       properties:
         itemNet:
@@ -1725,7 +1730,7 @@ components:
         Full details for this object TBC.
     ProblemViolation:
       type: object
-      title: ProblemViolation
+      title: Problem Violation
       description: A validation error.
       properties:
         property:
@@ -1740,7 +1745,7 @@ components:
       readOnly: true
     ConfirmShippingDetails:
       type: object
-      title: ConfirmShippingDetails
+      title: Confirm Shipping Details
       properties:
         fulfilmentUuid:
           type: string
@@ -1760,7 +1765,7 @@ components:
       writeOnly: true
     OrderConfirmDetails:
       type: object
-      title: OrderConfirmDetails
+      title: Order Confirm Details
       description: Additional details to add during the draft order confirm request.
       properties:
         fulfilmentShippingMethods:
@@ -1782,7 +1787,28 @@ components:
         example-1:
           fulfilmentShippingMethods:
             - fulfilmentUuid: f0182a12-b5a8-4997-bb33-773932afc53d
-              shippingMethod: express
+              shippingMethod:
+                code: express
+    ShippingMethod:
+      type: object
+      title: Shipping Method
+      description: |-
+        Details of a shipping method offered for a fulfilment.
+
+        This model will later include costs.
+      properties:
+        code:
+          type: string
+          pattern: '^[a-z0-9-]+$'
+          example: express
+          minLength: 1
+          description: The code for the Print Trail shipping method.
+          maxLength: 60
+        name:
+          type: string
+          description: A human readable short name for the shipping method.
+          example: Express
+          readOnly: true
   securitySchemes:
     ChannelApiKey:
       type: http
