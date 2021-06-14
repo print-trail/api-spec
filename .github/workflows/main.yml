@@ -1,20 +1,22 @@
-- name: Spectral Linting
-  # You may pin to the exact commit or the version.
-  # uses: stoplightio/spectral-action@8ff2d4abeb218206e983b59fdbb173e5df091020
-  uses: stoplightio/spectral-action@v0.7.3
-  with:
-    # The pattern describing the file paths to lint with Spectral
-    file_glob: openapi/v1/print-trail-channel-api.yaml
-    # Custom ruleset to load in Spectral.
+name: Run spectral on api description push
 
-# Controls when the action will run. 
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
-  # Allows you to run this workflow manually from the Actions tab
+    paths:
+    - 'openapi/v1/print-trail-channel-api.yaml'
   workflow_dispatch:
+  pull_request:
 
+jobs:
+  build:
+    name: Run Spectral
+    runs-on: ubuntu-latest
+    steps:
+      # Check out the repository
+      - uses: actions/checkout@v2
+
+      # Run Spectral
+      - uses: stoplightio/spectral-action@v0.5.5
+        with:
+          file_glob: 'openapi/v1/print-trail-channel-api.yaml'
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
