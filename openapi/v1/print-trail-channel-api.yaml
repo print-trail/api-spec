@@ -1,4 +1,4 @@
-openapi: 3.0.0
+openapi: 3.0.3
 info:
   title: channel
   version: 1.1.0
@@ -82,9 +82,8 @@ paths:
                             countryCode: GB
                           status: draft
                           availableShippingMethods:
-                            - shippingMethod:
-                                code: standard
-                                name: Standard
+                            - code: standard
+                              name: Standard
                           orderLines:
                             - quantity: 23
                               lineNumber: ptbd-order-0001234/004
@@ -225,9 +224,8 @@ paths:
                             countryCode: GB
                           status: processing
                           availableShippingMethods:
-                            - shippingMethod:
-                                code: standard
-                                name: Standard
+                            - code: standard
+                              name: Standard
                           orderLines:
                             - quantity: 23
                               lineNumber: ptbd-order-0001234/004
@@ -375,17 +373,26 @@ paths:
         - schema:
             type: string
             format: date-time
-            example: '2021-06-09T22:11:54'
+            example: '2021-06-09T22:11:54Z'
           in: query
           name: created-since
           description: Match orders that were created on or after the given date-time
         - schema:
             type: string
-            example: '2021-04-01T00:00:00'
+            example: '2021-04-01T00:00:00Z'
             format: date-time
           in: query
           name: updated-since
           description: Match orders that were updated on or after the given date-time
+        - schema:
+            type: string
+            pattern: '^[0-9- :ISBN]$'
+            minLength: 10
+            maxLength: 30
+            example: 12345-12345-99
+          in: query
+          name: isbn
+          description: Match a single ISBN
       description: |-
         Select a collection of matching orders.
 
@@ -662,6 +669,33 @@ paths:
                 $ref: '#/components/schemas/Problem'
       operationId: getProduct
       description: Return a single product by UUID.
+  '/v1/channels/{channelId}/webhooks':
+    parameters:
+      - schema:
+          type: string
+        name: channelId
+        in: path
+        required: true
+    post:
+      summary: Register Webhook URI
+      operationId: registerWebhookUri
+      responses:
+        '200':
+          description: OK
+      description: |-
+        Register the URL to send webhooks to.
+
+        The API supports just one webhook URL at this time, so registering a new URL will overwrite teh current URL.
+
+        The `{notificationType}` placeholder may be used to insert the notification type into the path or a query parameter when the webhook URL is
+      tags:
+        - All
+        - Channel
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookDetail'
 components:
   schemas:
     Order:
@@ -745,12 +779,10 @@ components:
                       currencyCode: GBP
                       amountMinorUnits: 1299
               availableShippingMethods:
-                - shippingMethod:
-                    code: standard
-                    name: Standard
-                - shippingMethod:
-                    code: express
-                    name: Express
+                - code: standard
+                  name: Standard
+                - code: express
+                  name: Express
               requestedShippingMethod: string
           orderLines:
             - quantity: 23
@@ -1014,10 +1046,8 @@ components:
           format: date-time
           description: TBC
           example: '2021-04-21T12:13:14+00:00'
-        webhookUrl:
-          type: string
-          minLength: 1
-          description: 'The URL that notifications will be sent to, for processing by the shop on the channel. Notifications include order acceptance, shipping, cancellation.'
+        webhookDetail:
+          $ref: '#/components/schemas/WebhookDetail'
         code:
           type: string
           minLength: 3
@@ -1031,9 +1061,9 @@ components:
         - name
         - state
         - mode
-        - webhookUrl
         - code
       readOnly: true
+      x-examples: {}
     Product:
       type: object
       description: |-
@@ -1074,6 +1104,7 @@ components:
           sku: BOOK/HB/abc-123
         example-product-orderline-request-uuid:
           uuid: 83b0e08f-aa07-4a5b-b74b-c578bfe89359
+      title: Product
       properties:
         name:
           type: string
@@ -1085,6 +1116,16 @@ components:
           minLength: 1
           description: The public/shop product SKU as registered in Print Trail.
           example: BOOK/HB/abc-123
+        isbn:
+          type: string
+          pattern: '^[0-9- :ISBN]$'
+          minLength: 10
+          maxLength: 30
+          example: 978-0-596-52068-7
+          description: |-
+            An ISBN, which can be supplied when creating an order as either formatted or as a string of 10 or 13 digits.
+
+            The check digitwill be validated.
         type:
           type: string
           minLength: 1
@@ -1159,7 +1200,6 @@ components:
         - description
         - additionalDetails
         - activeState
-      title: Product
     Fulfilment:
       type: object
       description: |-
@@ -1208,8 +1248,10 @@ components:
           type: array
           minItems: 0
           example:
-            - standard
-            - express
+            - code: standard
+              name: Standard
+            - code: express
+              name: Express
           description: A list of shipping methods that this fulfilment supports.
           items:
             $ref: '#/components/schemas/ShippingMethod'
@@ -1224,6 +1266,7 @@ components:
         - orderLines
         - availableShippingMethods
       readOnly: true
+      x-examples: {}
     PostalAddress:
       type: object
       title: Postal Address
@@ -1809,6 +1852,14 @@ components:
           description: A human readable short name for the shipping method.
           example: Express
           readOnly: true
+    WebhookDetail:
+      title: WebhookDetail
+      type: object
+      description: The detail for a webhook. Just contains the URI at this time.
+      properties:
+        uri:
+          type: string
+          example: 'https://example.com/webhooks/{notificationType}'
   securitySchemes:
     ChannelApiKey:
       type: http

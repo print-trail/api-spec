@@ -1,0 +1,22 @@
+openapi: 3.1.0
+info:
+  title: Channel Webhooks
+  version: 1.0.0-dev
+  description: Webhooks for Print Trail API
+  contact:
+    name: Jason Judge
+    email: jason.judge@consil.co.uk
+  x-logo:
+    url: 'https://print-trail.github.io/api-spec/logo.png'
+    backgroundColor: '#fafafa'
+    altText: Print Trail Logo
+webhooks:
+  order-status-update:
+    post:
+      operationId: orderStatusUpdate
+      requestBody:
+        content:
+          application/json: {}
+      responses:
+        "200":
+          description: Indicates the webhook was accepted.
