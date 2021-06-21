@@ -384,15 +384,6 @@ paths:
           in: query
           name: updated-since
           description: Match orders that were updated on or after the given date-time
-        - schema:
-            type: string
-            pattern: '^[0-9- :ISBN]$'
-            minLength: 10
-            maxLength: 30
-            example: 12345-12345-99
-          in: query
-          name: isbn
-          description: Match a single ISBN
       description: |-
         Select a collection of matching orders.
 
@@ -557,6 +548,15 @@ paths:
           name: active-state
           description: Select only products of the given state or states
           style: form
+        - schema:
+            type: string
+            pattern: '^[0-9- :ISBN]+$'
+            minLength: 10
+            maxLength: 30
+            example: '9784651366319'
+          in: query
+          name: isbn
+          description: Match a single product ISBN
   '/v1/channels/{channelId}/orders/{orderUuid}/confirm':
     parameters:
       - $ref: '#/components/parameters/channelId'
@@ -1118,7 +1118,7 @@ components:
           example: BOOK/HB/abc-123
         isbn:
           type: string
-          pattern: '^[0-9- :ISBN]$'
+          pattern: '^[0-9- :ISBN]+$'
           minLength: 10
           maxLength: 30
           example: 978-0-596-52068-7
