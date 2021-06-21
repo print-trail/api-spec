@@ -1158,12 +1158,22 @@ components:
               - value
           readOnly: true
         podEnabled:
-          type: boolean
+          type: string
           default: false
+          example: 'true'
+          enum:
+            - 'true'
+            - 'false'
+          description: Indicates that this product can be producted using print-on-demand.
           readOnly: true
-        warehouseEnabled:
-          type: boolean
+        intentoryEnabled:
+          type: string
           default: false
+          example: 'false'
+          enum:
+            - 'true'
+            - 'false'
+          description: Indicates this prodict is available as an inventory item.
           readOnly: true
         activeState:
           type: string
@@ -1199,6 +1209,8 @@ components:
         - type
         - description
         - additionalDetails
+        - podEnabled
+        - intentoryEnabled
         - activeState
     Fulfilment:
       type: object
