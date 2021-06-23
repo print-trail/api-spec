@@ -1111,6 +1111,11 @@ components:
           minLength: 1
           example: My Happy Place Book
           readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          description: Can be used as an alternative to SKU when writing order lines.
+          example: 83b0e08f-aa07-4a5b-b74b-c578bfe89359
         sku:
           type: string
           minLength: 1
@@ -1199,11 +1204,6 @@ components:
           items:
             $ref: '#/components/schemas/ProductPrice'
           readOnly: true
-        uuid:
-          type: string
-          format: uuid
-          description: Can be used as an alternative to SKU when writing order lines.
-          example: 83b0e08f-aa07-4a5b-b74b-c578bfe89359
       required:
         - name
         - type
@@ -1324,9 +1324,10 @@ components:
           $ref: '#/components/schemas/State'
         country:
           $ref: '#/components/schemas/Country'
-      required:
-        - address1
-        - country
+        uuid:
+          type: string
+          format: uuid
+          description: 'The Print Trail unique ID for the address. If the UUID is known, for an address already submitted, then it can be used instead of the remaining address postal details.'
     Contact:
       title: Contact
       type: object
