@@ -1221,6 +1221,7 @@ components:
 
         Note the use of British English spelling of 'fulfilment'.
       title: Fulfilment
+      x-examples: {}
       properties:
         uuid:
           type: string
@@ -1270,6 +1271,13 @@ components:
           readOnly: true
         requestedShippingMethod:
           $ref: '#/components/schemas/ShippingMethod'
+        trackingDetails:
+          type: array
+          minItems: 0
+          description: 'Tracking details are optional, since they depend on the shipping provider supplying the details.'
+          items:
+            $ref: '#/components/schemas/TrackingDetails'
+          readOnly: true
       required:
         - uuid
         - productionMethod
@@ -1278,7 +1286,6 @@ components:
         - orderLines
         - availableShippingMethods
       readOnly: true
-      x-examples: {}
     PostalAddress:
       type: object
       title: Postal Address
@@ -1872,6 +1879,47 @@ components:
         uri:
           type: string
           example: 'https://example.com/webhooks/{notificationType}'
+    TrackingDetails:
+      type: object
+      title: Tracking Details
+      description: |-
+        A list of shipping tracking details for a fulfilment.
+
+        All properties are optional.
+
+        Each fulfilmentr will normally be expected to be shipped as a single package, though a shipping provider has the option to split packages resulting in multiple stracking details.
+      properties:
+        number:
+          type: string
+          description: 'The tracking number. The tracking number will be a string supplied by the shipping provider, which may be numeric or non-numeric.'
+          maxLength: 60
+          example: tracking-12345-abcde
+          readOnly: true
+        url:
+          type: string
+          format: uri
+          maxLength: 100
+          example: 'https://example.com/tracking/12345-abcde'
+          description: Provides a link to the tracking page for the shipping provider.
+          readOnly: true
+        courier:
+          type: string
+          maxLength: 60
+          example: Royal Mail
+          description: A name or code that identifies the courier providing the shipping.
+          readOnly: true
+        method:
+          type: string
+          maxLength: 100
+          example: First class special parcel
+          description: A name or code to identify the service used by the shipping provider.
+          readOnly: true
+        shippedAt:
+          type: string
+          format: date-time
+          description: The date and time the package was shipped. ISO-8601 format.
+          example: '2000-01-23T01:23:45.678+09:00'
+      readOnly: true
   securitySchemes:
     ChannelApiKey:
       type: http
