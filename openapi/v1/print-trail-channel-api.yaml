@@ -96,8 +96,8 @@ paths:
                                 additionalDetails:
                                   - key: number_of_pages
                                     value: '320'
-                                podEnabled: false
-                                warehouseEnabled: false
+                                podEnabled: 'false'
+                                inventoryEnabled: 'false'
                                 activeState: active
                                 dimensions:
                                   weight:
@@ -115,12 +115,12 @@ paths:
                                 price:
                                   - net:
                                       currencyCode: GBP
-                                      amountMinorUnits: 1299
+                                      minorUnits: 1299
                                 uuid: 83b0e08f-aa07-4a5b-b74b-c578bfe89359
                               price:
                                 itemNet:
                                   currencyCode: GBP
-                                  amountMinorUnits: 1299
+                                  minorUnits: 1299
                       orderLines:
                         - quantity: 23
                           lineNumber: ptbd-order-0001234/004
@@ -133,8 +133,8 @@ paths:
                             additionalDetails:
                               - key: number_of_pages
                                 value: '320'
-                            podEnabled: false
-                            warehouseEnabled: false
+                            podEnabled: 'false'
+                            inventoryEnabled: 'false'
                             activeState: active
                             dimensions:
                               weight:
@@ -152,12 +152,12 @@ paths:
                             price:
                               - net:
                                   currencyCode: GBP
-                                  amountMinorUnits: 1299
+                                  minorUnits: 1299
                             uuid: 83b0e08f-aa07-4a5b-b74b-c578bfe89359
                           price:
                             itemNet:
                               currencyCode: GBP
-                              amountMinorUnits: 1299
+                              minorUnits: 1299
                       errors:
                         - code: invalid-sku
                           message: The SKU is not recognised for any available product.
@@ -238,8 +238,8 @@ paths:
                                 additionalDetails:
                                   - key: number_of_pages
                                     value: '320'
-                                podEnabled: true
-                                warehouseEnabled: true
+                                podEnabled: 'true'
+                                inventoryEnabled: 'true'
                                 activeState: active
                                 dimensions:
                                   weight:
@@ -475,8 +475,8 @@ paths:
                         additionalDetails:
                           - key: string
                             value: string
-                        podEnabled: true
-                        warehouseEnabled: true
+                        podEnabled: 'true'
+                        inventoryEnabled: 'true'
                         activeState: active
                         dimensions:
                           weight:
@@ -502,8 +502,8 @@ paths:
                       to: 0
                       total: 0
                     links:
-                      first: 'http://178.128.35.155/api/fulfilments?page=1'
-                      last: 'http://178.128.35.155/api/fulfilments?page=2'
+                      first: 'http://example.com/api/fulfilments?page=1'
+                      last: 'http://example.com/api/fulfilments?page=2'
                       prev: 'http://example.com'
                       next: 'http://example.com'
       operationId: searchProducts
@@ -754,7 +754,7 @@ components:
                       - key: number_of_pages
                         value: '320'
                     podEnabled: false
-                    warehouseEnabled: false
+                    inventoryEnabled: false
                     activeState: active
                     dimensions:
                       weight:
@@ -797,7 +797,7 @@ components:
                   - key: number_of_pages
                     value: '320'
                 podEnabled: false
-                warehouseEnabled: false
+                inventoryEnabled: false
                 activeState: active
                 dimensions:
                   weight:
@@ -1080,7 +1080,7 @@ components:
             - key: number_of_pages
               value: '320'
           podEnabled: false
-          warehouseEnabled: false
+          inventoryEnabled: false
           activeState: active
           dimensions:
             weight:
@@ -1164,16 +1164,16 @@ components:
           readOnly: true
         podEnabled:
           type: string
-          default: false
+          default: 'false'
           example: 'true'
           enum:
             - 'true'
             - 'false'
           description: Indicates that this product can be producted using print-on-demand.
           readOnly: true
-        intentoryEnabled:
+        inventoryEnabled:
           type: string
-          default: false
+          default: 'false'
           example: 'false'
           enum:
             - 'true'
@@ -1210,7 +1210,7 @@ components:
         - description
         - additionalDetails
         - podEnabled
-        - intentoryEnabled
+        - inventoryEnabled
         - activeState
     Fulfilment:
       type: object
@@ -1383,11 +1383,11 @@ components:
       properties:
         first:
           type: string
-          example: 'http://178.128.35.155/api/fulfilments?page=1'
+          example: 'http://example.com/api/fulfilments?page=1'
           format: uri
         last:
           type: string
-          example: 'http://178.128.35.155/api/fulfilments?page=2'
+          example: 'http://example.com/api/fulfilments?page=2'
           format: uri
         prev:
           type: string
@@ -1451,7 +1451,7 @@ components:
               - key: number_of_pages
                 value: '320'
             podEnabled: false
-            warehouseEnabled: false
+            inventoryEnabled: false
             activeState: active
             dimensions:
               weight:
