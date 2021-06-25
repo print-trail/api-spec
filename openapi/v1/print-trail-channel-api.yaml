@@ -1915,11 +1915,15 @@ components:
           example: Royal Mail
           description: A name or code that identifies the courier providing the shipping.
           readOnly: true
-        method:
+        methodCode:
           type: string
-          maxLength: 100
+          example: 1st-parcel
+          description: A machine-readable code to identify the service used by the shipping provider.
+          readOnly: true
+        methodName:
+          type: string
           example: First class special parcel
-          description: A name or code to identify the service used by the shipping provider.
+          description: A displayable name for the service used by the shipping provider.
           readOnly: true
         shippedAt:
           type: string
