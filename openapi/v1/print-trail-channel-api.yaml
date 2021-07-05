@@ -1119,16 +1119,43 @@ components:
           minLength: 1
           description: The public/shop product SKU as registered in Print Trail.
           example: BOOK/HB/abc-123
+        ean:
+          type: string
+          pattern: '^[0-9-]{8,14}$'
+          example: '9780596520687'
+          minLength: 8
+          maxLength: 14
+          description: |-
+            The European Article Number/International Article Number, if the product has one.
+
+            Unformatted digits, EAN-8, EAN-12, EAN-13 or EAN-14.
+          readOnly: true
         isbn:
           type: string
-          pattern: '^[0-9- :ISBN]+$'
-          minLength: 10
-          maxLength: 30
+          pattern: '^[0-9-]{13,20}$'
+          minLength: 13
+          maxLength: 20
           example: 978-0-596-52068-7
           description: |-
             An ISBN, which can be supplied when creating an order as either formatted or as a string of 10 or 13 digits.
 
             The check digitwill be validated.
+        upc:
+          type: string
+          pattern: '^[0-9]{12}$'
+          example: '036000291452'
+          description: |-
+            The Universal Product Code, primarily for use in Northern America, if the product has one.
+
+            Unformatted digits, UPC-A (12 digits, including check digit).
+          readOnly: true
+        gtin:
+          type: string
+          pattern: '^[0-9]{8,14}$'
+          minLength: 8
+          maxLength: 14
+          example: '0123456789012'
+          readOnly: true
         type:
           type: string
           minLength: 1
