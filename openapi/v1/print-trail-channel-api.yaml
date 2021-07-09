@@ -507,7 +507,12 @@ paths:
                       prev: 'http://example.com'
                       next: 'http://example.com'
       operationId: searchProducts
-      description: 'Retrieve all products for a channel, according to the filter.'
+      description: |-
+        Retrieve all products for a channel, according to the filter.
+
+        When searching on ISBN, either an ISBN-10 or an ISBN-13 may be supplied, with or without formatting (spaces and dashes only).
+
+        The uuid query parameter can be a single UUID or a comma-separated list of UUIDs.
       parameters:
         - schema:
             type: integer
@@ -523,7 +528,7 @@ paths:
             example: 3272cb75-4260-49d5-b28f-6e5cc038d766
           in: query
           name: uuid
-          description: Match a specific product UUID
+          description: Match a single product UUID or multiple product UUIDs
           style: form
         - schema:
             type: string
@@ -550,13 +555,13 @@ paths:
           style: form
         - schema:
             type: string
-            pattern: '^[0-9- :ISBN]+$'
+            pattern: '^[0-9X -]+$'
             minLength: 10
             maxLength: 30
             example: '9784651366319'
           in: query
           name: isbn
-          description: Match a single product ISBN
+          description: 'Match a single product ISBN, any valid format'
   '/v1/channels/{channelId}/orders/{orderUuid}/confirm':
     parameters:
       - $ref: '#/components/parameters/channelId'
