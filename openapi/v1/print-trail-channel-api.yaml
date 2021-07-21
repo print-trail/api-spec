@@ -218,7 +218,7 @@ paths:
                         note: string
                       fulfilments:
                         - uuid: af6513a1-112b-4184-aeac-e3ab5c99cb38
-                          productionMethod: warehouse
+                          productionMethod: inventory
                           supplierLocation:
                             code: uk-northwest
                             countryCode: GB
@@ -470,7 +470,7 @@ paths:
                     data:
                       - name: My Happy Place Book
                         sku: BOOK/HB/abc-123
-                        type: warehouse
+                        type: inventory
                         description: string
                         additionalDetails:
                           - key: string
@@ -1167,7 +1167,7 @@ components:
           example: pod
           enum:
             - pod
-            - warehouse
+            - inventory
           readOnly: true
         description:
           type: string
@@ -1263,7 +1263,7 @@ components:
           minLength: 1
           enum:
             - pod
-            - warehouse
+            - inventory
           example: pod
         supplierLocation:
           $ref: '#/components/schemas/SupplierLocation'
